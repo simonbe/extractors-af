@@ -1,0 +1,14 @@
+{
+    "directory": "/tmpmnt/",
+    "api_key": "",
+    "version": "9",
+    "hosts": {
+            "local": {
+                    "url": "",
+                    "accessKey": "",
+                    "secretKey": "",
+                    "api": "S3v4",
+                    "lookup": "auto"
+            }
+    }
+}
