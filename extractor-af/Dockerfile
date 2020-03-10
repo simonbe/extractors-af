@@ -1,4 +1,3 @@
-# name:extractor-af
 FROM python:3
 
 ADD extract.py /
