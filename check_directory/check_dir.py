@@ -6,11 +6,8 @@ import boto3
 from botocore.client import Config
 import os
 
-
-print(requests.certs.where())
-
-secrets_from_env = False
-download_all = True
+store_s3 = False
+secrets_from_env = True
 
 if secrets_from_env == True:
     config = { 'api_key': os.getenv('API_KEY'),
@@ -22,35 +19,27 @@ else:
     with open('config.json', 'r') as f:
         config = json.load(f)
 
+print('config:', config)
+
+api_key = config['api_key']
+directory = config['directory']
 accessKey = config['hosts']['local']['accessKey']
 api = config['hosts']['local']['api']
 lookup = config['hosts']['local']['lookup']
 secretKey = config['hosts']['local']['secretKey']
 s3_url = config['hosts']['local']['url']
 
-# obs: verify=False disabling ssl check (Af proxy error)
-s3 = boto3.resource('s3',
-                    endpoint_url=s3_url,
-                    aws_access_key_id=accessKey,
-                    aws_secret_access_key=secretKey,
-                    config=Config(signature_version='s3v4'),
-                    region_name='us-east-1',
-                    verify=False)
 
-bucket = s3.Bucket('employer')
+print('listing directory' + directory)
 
-print('file saved s3')
-print('listing current data in bucket:')
+from os import listdir
+from os.path import isfile, join
 
-all_keys = []
-for obj in bucket.objects.all():
-    print(obj.key, obj.size, obj.last_modified)
-    all_keys.append(obj.key)
-    if download_all == True:
-        print('download')
-        if 'stream_ads/' in obj.key:
-            bucket.download_file(obj.key, obj.key.split('/')[1])
+onlyfiles = [f for f in listdir(directory) if isfile(join(directory, f))]
 
+print('length files=',len(onlyfiles))
 
+for f in onlyfiles:
+    print(f)
 
 print('end')

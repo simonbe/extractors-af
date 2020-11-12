@@ -7,7 +7,7 @@ from botocore.client import Config
 import os
 
 store_s3 = True
-secrets_from_env = True
+secrets_from_env = False
 
 if secrets_from_env == True:
     config = { 'api_key': os.getenv('API_KEY'),
@@ -29,7 +29,7 @@ lookup = config['hosts']['local']['lookup']
 secretKey = config['hosts']['local']['secretKey']
 s3_url = config['hosts']['local']['url']
 
-yesterday = datetime.strftime(datetime.now() - timedelta(1), '%Y-%m-%d')
+yesterday = datetime.strftime(datetime.now() - timedelta(19), '%Y-%m-%d')
 today_date = date.today()
 from_date = yesterday
 
@@ -47,6 +47,7 @@ resp = requests.get(api_url+date_url,headers=headers)
 result = resp.json()
 
 print('length result:', len(result))
+#print(result)
 
 # local save
 filename_local = directory + 'stream_ads_date_now_' + str(today_date) + '_from_' + str(from_date) + '.json' 
@@ -81,7 +82,7 @@ if store_s3 == True:
 
     for my_bucket_object in bucket.objects.all():
         print(my_bucket_object)
-    
+
     print('end s3')
 
 print('end')
